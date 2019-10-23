@@ -16,15 +16,31 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/signup")
-def signup():
-    return 0
+@app.route("/login")
+def login():
+    session.clear()
+
+    username = request.form.get("username")
+
+    if request.method == "POST":
+        if len(username) < 1 or username is '':
+            return render_template("error.html", message="username field is required!")
+        if username in usersLogged:
+            return render_template("error.html", message="new username is required!")
+        usersLogged.append(username)
+        session['username'] = username
+
+        return redirect("/")
+    else:
+        return render_template("login.html")
 
 
 @app.route("/logout", methods=["POST"])
 @login_required
 def logout():
-    return render_template("index.html")
+    usersLogged.remove(session['username'])
+    session.clear()
+    return render_template("logout.html")
 
 
 if __name__ == "__main__":
