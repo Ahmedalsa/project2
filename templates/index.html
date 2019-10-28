@@ -5,4 +5,17 @@
 {% endblock %}
 
 {% block content %}
+<h2 id="username"></h2>
+<h3 id="intro"></h3>
+<div class="">
+  <form class="" action="{{ url_for('') }}" method="post">
+    <table>
+      <tr>
+        <td class="bold">Name:</td>
+        <td><input type="text" name="display_user" size="50" required></td>
+      </tr>
+    </table>
+    <button type="button" name="login">login</button>
+  </form>
+</div>
 {% endblock %}
