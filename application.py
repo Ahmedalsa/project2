@@ -10,6 +10,28 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
+#following arrays are lists for active channels and users logged in
+channel_arr ["General"]
+user_arr = []
+
+dm_list {}
+
+private_channles = {}
+
+#current datetime
+current = datetime.datetime.now()
+
+channel_messages = {
+    "General": {
+        'messages': [startup_message]
+}}
+
+startup_message = {
+    "channel": "General",
+    "user_from": "Flack Bot",
+    "user_to": "",
+    "timestamp": now.strftime("%a %b %d %I:%M:%S %Y"),
+    "msg_txt": "Welcome to Flack Messaging"}
 
 @app.route("/")
 def index():
@@ -40,7 +62,7 @@ def login():
 def logout():
     usersLogged.remove(session['username'])
     session.clear()
-    return render_template("logout.html")
+    return render_template("index.html")
 
 
 if __name__ == "__main__":
