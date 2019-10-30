@@ -64,6 +64,12 @@ def logout():
     session.clear()
     return render_template("index.html")
 
+@app.route("/chat", methods=["POST", "GET"])
+@login_required
+def chat():
+    return render_template("channels.html", name=user)
+
+
 
 if __name__ == "__main__":
     app.run()
