@@ -69,6 +69,24 @@ def logout():
 def chat():
     return render_template("channels.html", name=user)
 
+@socketio.on("submit channel")
+def new_channel(data):
+    channel = data["channel"]
+    channel_arr.append(channel)
+    emit("announce channel", {"channel": channel}, broadcast=True)
+    return 1
+
+@app.route("/users", methods=["POST", "GET"])
+@login_required
+def users():
+    return jsonify({"success": True, "active_users": user_arr})
+    
+
+@app.route("/channels", methods=["POST", "GET"])
+@login_required
+def channels():
+    return jsonify({"success": True, "channel_arr": channel_arr})
+
 
 
 if __name__ == "__main__":
