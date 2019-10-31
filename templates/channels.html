@@ -7,7 +7,22 @@
 {% block content %}
 <section>
   <nav>
-    
+    <textarea name="name" rows="8" cols="80">
+      {%- if messages -%}
+                {%- for message in messages -%}
+                    <{{ message[0] }}> - [{{ message[1] }}]: {{ message [2] }} {{'\n'}}
+                {%- endfor -%}
+      {%- endif -%}
+    </textarea>
   </nav>
+
+<article class="">
+  <form>
+    <textarea name="name" rows="8" cols="80" placeholder="Enter message here"></textarea>
+    <input type="text" name="" value="">
+    <input type="text" name="" value="">
+  </form>
+</article>
+
 </section>
 {% endblock %}

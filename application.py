@@ -80,12 +80,19 @@ def new_channel(data):
 @login_required
 def users():
     return jsonify({"success": True, "active_users": user_arr})
-    
+
 
 @app.route("/channels", methods=["POST", "GET"])
 @login_required
 def channels():
     return jsonify({"success": True, "channel_arr": channel_arr})
+
+@app.route("/get_messages", methods=["POST", "GET"])
+@login_required
+def get_messages():
+    channel = request.form.get("channel")
+    status = request.form.get("message_status")
+    displayname = request.form.get("displayname")
 
 
 
