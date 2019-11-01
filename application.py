@@ -94,6 +94,21 @@ def get_messages():
     status = request.form.get("message_status")
     displayname = request.form.get("displayname")
 
+@socketio.on("submit message")
+def new_message(message_data):
+    timestamp = time.asctime( time.localtime( time.time() ) )
+    user_from = message_data["user_from"]
+    channel = message_data["channel"]
+    text = message_data["text"]
+
+    message = {"channel": channel,
+           "user_from": user_from,
+           "user_to": channel,
+           "timestamp": timestamp,
+           "text": text}
+           
+
+
 
 
 if __name__ == "__main__":
