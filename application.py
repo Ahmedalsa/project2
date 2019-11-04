@@ -18,6 +18,8 @@ dm_list {}
 
 private_channles = {}
 
+channelMessages = dict()
+
 #current datetime
 current = datetime.datetime.now()
 
@@ -47,9 +49,9 @@ def login():
     if request.method == "POST":
         if len(username) < 1 or username is '':
             return render_template("error.html", message="username field is required!")
-        if username in usersLogged:
+        if username in user_arr:
             return render_template("error.html", message="new username is required!")
-        usersLogged.append(username)
+        user_arr.append(username)
         session['username'] = username
 
         return redirect("/")
@@ -68,6 +70,20 @@ def logout():
 @login_required
 def chat():
     return render_template("channels.html", name=user)
+
+@app.route("/create", methods=['GET','POST'])
+def create():
+    new = request.form.get("channel")
+
+    if request.method == "POST":
+        if new in channel_arr:
+            return render_template("error.html", message="Already created!")
+
+        channel_arr.append(new)
+        channelMessages[new] = deque()
+
+        return redirect("/channels/" + new)
+
 
 @socketio.on("submit channel")
 def new_channel(data):
@@ -106,7 +122,7 @@ def new_message(message_data):
            "user_to": channel,
            "timestamp": timestamp,
            "text": text}
-           
+
 
 
 
