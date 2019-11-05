@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, render_template, request, jsonify, Response
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, send, emit, join_room, leave_room
 from decorators import login_required
 import random, json, time, datetime
 
@@ -71,8 +71,8 @@ def logout():
 def chat():
     return render_template("channels.html", name=user)
 
-@app.route("/create", methods=['GET','POST'])
-def create():
+@app.route("/new_channel", methods=['GET','POST'])
+def new_channel():
     new = request.form.get("channel")
 
     if request.method == "POST":
@@ -87,13 +87,6 @@ def create():
     else:
         return render_template("create.html", channels = channel_arr)
 
-
-@socketio.on("submit channel")
-def new_channel(data):
-    channel = data["channel"]
-    channel_arr.append(channel)
-    emit("announce channel", {"channel": channel}, broadcast=True)
-    return 1
 
 @app.route("/users", methods=["POST", "GET"])
 @login_required
@@ -118,6 +111,29 @@ def get_messages():
     channel = request.form.get("channel")
     status = request.form.get("message_status")
     displayname = request.form.get("displayname")
+
+@socketio.on("join", namespace='/')
+def on_join():
+    room = session.get('current_channel')
+
+    join_room(room)
+
+    emit("status", {"joined": session.get('username'),
+          "channel": room,
+          "message": session.get('username') + "entered this chatroom"},
+          room=room)
+
+@socketio.on("join", namespace='/')
+def on_leave():
+    room = session.get('current_channel')
+
+    leave_room(room)
+
+    emit("status", {"joined": session.get('username'),
+          "channel": room,
+          "message": session.get('username') + "entered this chatroom"},
+          room=room)
+
 
 @socketio.on("submit message")
 def new_message(message, timestamp):
