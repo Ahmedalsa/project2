@@ -84,6 +84,9 @@ def create():
 
         return redirect("/channels/" + new)
 
+    else:
+        return render_template("create.html", channels = channel_arr)
+
 
 @socketio.on("submit channel")
 def new_channel(data):
@@ -98,10 +101,16 @@ def users():
     return jsonify({"success": True, "active_users": user_arr})
 
 
-@app.route("/channels", methods=["POST", "GET"])
+@app.route("/channels/<channel>", methods=["POST", "GET"])
 @login_required
 def channels():
-    return jsonify({"success": True, "channel_arr": channel_arr})
+    session['current_channel'] = channel
+
+    if request.method == "POST":
+
+        return redirect("/")
+    else:
+        return jsonify({"success": True, "channel_arr": channel_arr})
 
 @app.route("/get_messages", methods=["POST", "GET"])
 @login_required
@@ -111,17 +120,17 @@ def get_messages():
     displayname = request.form.get("displayname")
 
 @socketio.on("submit message")
-def new_message(message_data):
-    timestamp = time.asctime( time.localtime( time.time() ) )
+def new_message(message, timestamp):
     user_from = message_data["user_from"]
     channel = message_data["channel"]
     text = message_data["text"]
+    room = session.get('current_channel')
 
-    message = {"channel": channel,
-           "user_from": user_from,
-           "user_to": channel,
-           "timestamp": timestamp,
-           "text": text}
+    if len(channelMessages[room]) > 100:
+        emit({"user": session.get('username'),
+              "timestamp": timestamp,
+              "message": message},
+              room=room)
 
 
 
