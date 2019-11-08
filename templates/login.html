@@ -5,14 +5,15 @@
 {% endblock %}
 
 {% block content %}
-<h3>Start chatting</h3>
 
-<form class="" action="/login" method="post">
-  <div class="form-group">
-    <input type="text" name="" value="">
-    <small></small>
-  </div>
-  <button type="button" name="button"></button>
+<h4>Enter username!</h4>
+<h4>start chatting!</h4>
+<form action="/signin" method="POST">
+    <div class="form-group">
+        <input type="text" class="form-control" id="username" name="username" autofocus aria-describedby="userHelp">
+        <small id="userHelp" class="form-text text-muted">This is your username.</small>
+    </div>
+    <button class="btn btn-primary" type="submit">Sign In</button>
 </form>
 
 {% endblock %}
