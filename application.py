@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, render_template, request, jsonify, Response
-from flask_socketio import SocketIO, emit, send, emit, join_room, leave_room
+from flask_socketio  import SocketIO, emit, send, emit, join_room, leave_room
 from decorators import login_required
 import random, json, time, datetime
 
@@ -11,10 +11,10 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 #following arrays are lists for active channels and users logged in
-channel_arr ["General"]
+channel_arr =  ["General"]
 user_arr = []
 
-dm_list {}
+dm_list = {}
 
 private_channles = {}
 
