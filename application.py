@@ -20,24 +20,27 @@ private_channles = {}
 
 channelMessages = dict()
 
+
+startup_message = {
+  "channel": "General",
+   "user_from": "Flack Bot",
+   "user_to": "",
+   "timestamp": now.strftime("%a %b %d %I:%M:%S %Y"),
+   "msg_txt": "Welcome to Flack Messaging"}
+
 #current datetime
 current = datetime.datetime.now()
 
 channel_messages = {
-    "General": {
-        'messages': [startup_message]
+   "General": {
+       'messages': [startup_message]
 }}
 
-startup_message = {
-    "channel": "General",
-    "user_from": "Flack Bot",
-    "user_to": "",
-    "timestamp": now.strftime("%a %b %d %I:%M:%S %Y"),
-    "msg_txt": "Welcome to Flack Messaging"}
+
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", channels=channel_arr)
 
 
 @app.route("/login")
