@@ -75,20 +75,12 @@ def chat():
     return render_template("channels.html", name=user)
 
 @app.route("/new_channel", methods=['GET','POST'])
+@socketio.on("submit channel")
 def new_channel():
-    new = request.form.get("channel")
-
-    if request.method == "POST":
-        if new in channel_arr:
-            return render_template("error.html", message="Already created!")
-
-        channel_arr.append(new)
-        channelMessages[new] = deque()
-
-        return redirect("/channels/" + new)
-
-    else:
-        return render_template("create.html", channels = channel_arr)
+    channel = data["channel"]
+    channel_list.append(channel)
+    emit("announce channel", {"channel": channel}, broadcast=True)
+    return 1
 
 
 @app.route("/users", methods=["POST", "GET"])
