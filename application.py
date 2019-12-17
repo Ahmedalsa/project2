@@ -104,30 +104,64 @@ def channels():
 @login_required
 def get_messages():
     channel = request.form.get("channel")
-    status = request.form.get("message_status")
-    displayname = request.form.get("displayname")
+    dn = request.form.get("displayname")
+    msg_status = request.form.get("msg_type")
 
-@socketio.on("join", namespace='/')
-def on_join():
-    room = session.get('current_channel')
+    if (msg_status == "PUBLIC"):
+        my_msgs = channel_messages.get(channel)
+    else:
+        my_msgs = user_dm_list.get(channel)
 
+    if (my_msgs):
+        msglist = my_msgs['messages']
+        if ((msg_status == "PUBLIC") or (channel == dn)):
+            return jsonify({"success": True, "channel_msgs": msglist})
+        else:
+            all_msgs = []
+            for msg in msglist:
+                # return only messages matching dn
+                if ((msg["user_from"] == dn) or (msg['user_to'] == dn)):
+                    all_msgs.append(msg)
+            return jsonify({"success": True, "channel_msgs": all_msgs})
+    else:
+        return jsonify({"success": False, "error_msg": "No messages"})
+
+@socketio.on('join')
+def on_join(data):
+    username = data['displayname']
+    if (username == ""):
+        return jsonify ({"success": False, "error_msg": "No text entered"})
+
+    if (not (username in user_list)):
+        user_list.append(username)
+        user_dm_list[username] = ({"channel": username, "messages": []})
+        emit("new user", {"username": username}, broadcast= True)
+    else:
+        emit("user logged in", {"username": username}, broadcast=True)
+
+    room = data['room']
     join_room(room)
+    Rooms[username] = room
+    print (f"username ", username, "has room ", Rooms[username])
+    return jsonify ({"success": True})
 
-    emit("status", {"joined": session.get('username'),
-          "channel": room,
-          "message": session.get('username') + "entered this chatroom"},
-          room=room)
-
-@socketio.on("join", namespace='/')
-def on_leave():
-    room = session.get('current_channel')
-
+@socketio.on('logout user')
+def on_leave(data):
+    username = data['displayname']
+    print (f"username ", username, " logging out")
+    room = Rooms[username]
     leave_room(room)
+    del Rooms[username]
+    emit("user logged out", {"username": username}, broadcast=True)
 
-    emit("status", {"joined": session.get('username'),
-          "channel": room,
-          "message": session.get('username') + "entered this chatroom"},
-          room=room)
+@socketio.on('leave')
+def on_leave(data):
+    username = data['displayname']
+    print (f"username ", username, " logging out")
+    room = Rooms[username]
+    leave_room(room)
+    del Rooms[username]
+    emit("user logged out", {"username": username}, broadcast=True)
 
 
 @socketio.on("submit message")
