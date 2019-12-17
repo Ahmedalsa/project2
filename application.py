@@ -92,13 +92,7 @@ def users():
 @app.route("/channels/<channel>", methods=["POST", "GET"])
 @login_required
 def channels():
-    session['current_channel'] = channel
-
-    if request.method == "POST":
-
-        return redirect("/")
-    else:
-        return jsonify({"success": True, "channel_arr": channel_arr})
+    return jsonify({"success": True, "channel_list": channel_list})
 
 @app.route("/get_messages", methods=["POST", "GET"])
 @login_required

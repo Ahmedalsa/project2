@@ -1,23 +1,23 @@
 {% extends "layout.html" %}
 
+{% block javascripts %}
+        <script src="{{ url_for('static', filename='index.js') }}"></script>
+{% endblock %}
+
 {% block title %}
     Flack Chat
 {% endblock %}
 
 {% block content %}
-    <h2>Create a new channel or join an existent one!</h2>
-    <form action="/create" method="post">
-        <div class="form-group">
-            <input type="text" class="form-control" name="channel" id="channel" autofocus>
-        </div>
-        <button class="btn btn-primary" type="submit">Create</button>
-    </form>
-
-    <script>
-        if (localStorage.getItem('last_channel')) {
-            // Redirect to last channel
-            let channel = localStorage.getItem('last_channel');
-            window.location.replace('/channels/' + channel);
-        }
-    </script>
+<h2 id="myname"></h2>
+<h4 id="welcome"></h4>
+ <p>
+<form id="login_form" action="{{ url_for('flackchat') }}", method="post">
+<table>
+ <tr>
+   <td class="bold">Display Name:</td>
+   <td><input id="dname_field" type="text" name="displayname" size="50" required></td></tr>
+</table>
+<button name="signin" id="signin">Sign In</button><input type="reset">
+</form>
 {% endblock %}

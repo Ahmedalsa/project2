@@ -9,52 +9,46 @@
 {% endblock %}
 
 {% block content %}
-<div>
-    <h1 style="margin-bottom: 1rem">
-        <span class="badge badge-dark">
-            {{ session.current_channel }}
-        </span>
-    </h1>
+<header>
+	  Logged in as <div id="dname">{{ name }}</div>
+	  </header>
 
-</div>
-<div class="container-channel custom-window">
-    <div id="chat-box" class="list-group">
-        {#
-            http://jinja.pocoo.org/docs/2.10/templates/#whitespace-control
+<section>
+  <nav>
+    Channels <p>
+    <p>
+      <table class="hoverTable" id="hoverTable">
+	</table>
+    <p>
+    Create new channel
+    <p>
+    <form id="new_channel" >
+    <input id="channel_name" type="text" name="new_channel" class="chn_name" autocomplete="off" autofocus placeholder="new channel">
+    <input id="submit" type=submit>
+    </form>
+    <p>
+      Direct Messages<br>
+      <table class="hoverTable" id="user_list">
+	</table>
+      <p>
+	<button id="logout_button" type=submit>Log Out</button>
 
-            Minus(-) used to strip all the whitespace
-            Only if there are messages, render it.
-        #}
-        <textarea id="chat" cols="30" rows="20" readonly>
-            {%- if messages -%}
-                {%- for message in messages -%}
-                    <{{ message[0] }}> - [{{ message[1] }}]: {{ message [2] }} {{'\n'}}
-                {%- endfor -%}
-                {{ '----- These are old messages -----' }}{{- '\n' -}}
-            {%- endif -%}
-        </textarea>
-    </div>
+  </nav>
 
-    <div id="message-box">
-        <div class="form-border">
-            <div class="form-row">
-                <div class="form-group col-sm">
-                    <div class="input-group">
-                        <input id="comment" class="form-control" size="50" autocomplete="off" autofocus>
-                    </div>
-                </div>
-                <div class="form-group col-sm-2">
-                    <button id="send-button" class="btn btn-success" type="reset">Send</button>
-                </div>
-                <div class="form-group col-sm-1">
-                    <button id="leave" type="button" class="btn btn-warning">Leave channel</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="file-selector">
-        <input type="file" accept="image/*" class="form-control-file" id="exampleFormControlFile1">
-    </div>
-</div>
+  <article>
+    <h4 id="message_header">Messages</h4>
+    <table class="hoverTable" id="message_list">
+	</table>
+    <h4>Enter new message</h4>
+    <form id="new_message">
+      <textarea class="newchn_msg" id="message_text" placeholder="Enter message here" wrap="soft">
+	</textarea>
+      <input type="hidden" value= {{ name }} id="displayname">
+      <input id="msg_submit" type="submit">
+    </form>
+
+    </article>
+
+</section>
 
 {% endblock %}
