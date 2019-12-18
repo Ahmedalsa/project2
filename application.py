@@ -20,16 +20,17 @@ private_channles = {}
 
 channelMessages = dict()
 
+#current datetime
+current = datetime.datetime.now()
 
 startup_message = {
   "channel": "General",
    "user_from": "Flack Bot",
    "user_to": "",
-   "timestamp": now.strftime("%a %b %d %I:%M:%S %Y"),
+   "timestamp": current.strftime("%a %b %d %I:%M:%S %Y"),
    "msg_txt": "Welcome to Flack Messaging"}
 
-#current datetime
-current = datetime.datetime.now()
+
 
 channel_messages = {
    "General": {
