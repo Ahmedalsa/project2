@@ -11,17 +11,21 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 #following arrays are lists for active channels and users logged in
-channel_arr =  ["General"]
-user_arr = []
+channel_list = ["General"]
+user_list = []
 
-dm_list = {}
+# Dictionary of users & messages
+user_dm_list = {}
 
-private_channles = {}
+# dictionary to track rooms, or private channels
+# Rooms = {"dn:" displayname, "room": room}
+Rooms = {}
 
-channelMessages = dict()
+# channel_messages = {
+#    channel: chn,
+#    messages: [{channel, displayname, timestamp, msg_txt}]
 
-#current datetime
-current = datetime.datetime.now()
+now = datetime.datetime.now()
 
 startup_message = {
   "channel": "General",
