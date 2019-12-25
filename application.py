@@ -9,37 +9,24 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 # Arrays of channel names and registered users
-channel_list = ["General"]
-user_list = []
 
 # Dictionary of users & messages
-user_dm_list = {}
 
 # dictionary to track rooms, or private channels
 # Rooms = {"dn:" displayname, "room": room}
-Rooms = {}
 
-# channel_messages = {
-#    channel: chn,
-#    messages: [{channel, displayname, timestamp, msg_txt}]
+# channel_messages
 
-now = datetime.datetime.now()
+messages1 = {}
 
-startup_message = {
-    "channel": "General",
-    "user_from": "Flack Bot",
-    "user_to": "",
-    "timestamp": now.strftime("%a %b %d %I:%M:%S %Y"),
-    "msg_txt": "Welcome to Flack Messaging"}
-
-channel_messages = {
-    "General": {
-        'messages': [startup_message]
-}}
 
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/chat")
+def chat():
+    return render_template("chat.html")
 
 @app.route("/logout", methods=["POST"])
 def logout():
