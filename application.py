@@ -1,16 +1,14 @@
 import os
 
 from flask import Flask, render_template, request, jsonify, Response
-from flask_socketio  import SocketIO, emit, send, emit, join_room, leave_room
-from decorators import login_required
 import random, json, time, datetime
-
+from flask_socketio import SocketIO, emit, join_room, leave_room
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
-#following arrays are lists for active channels and users logged in
+# Arrays of channel names and registered users
 channel_list = ["General"]
 user_list = []
 
@@ -28,80 +26,51 @@ Rooms = {}
 now = datetime.datetime.now()
 
 startup_message = {
-  "channel": "General",
-   "user_from": "Flack Bot",
-   "user_to": "",
-   "timestamp": current.strftime("%a %b %d %I:%M:%S %Y"),
-   "msg_txt": "Welcome to Flack Messaging"}
-
-
+    "channel": "General",
+    "user_from": "Flack Bot",
+    "user_to": "",
+    "timestamp": now.strftime("%a %b %d %I:%M:%S %Y"),
+    "msg_txt": "Welcome to Flack Messaging"}
 
 channel_messages = {
-   "General": {
-       'messages': [startup_message]
+    "General": {
+        'messages': [startup_message]
 }}
-
-
 
 @app.route("/")
 def index():
-    return render_template("index.html", channels=channel_arr)
-
-
-@app.route("/login")
-def login():
-    session.clear()
-
-    username = request.form.get("username")
-
-    if request.method == "POST":
-        if len(username) < 1 or username is '':
-            return render_template("error.html", message="username field is required!")
-        if username in user_arr:
-            return render_template("error.html", message="new username is required!")
-        user_arr.append(username)
-        session['username'] = username
-
-        return redirect("/")
-    else:
-        return render_template("login.html")
-
-
-@app.route("/logout", methods=["POST"])
-@login_required
-def logout():
-    usersLogged.remove(session['username'])
-    session.clear()
     return render_template("index.html")
 
-@app.route("/chat", methods=["POST", "GET"])
-@login_required
-def chat():
+@app.route("/logout", methods=["POST"])
+def logout():
+    return render_template("index.html")
+
+@app.route("/flackchat", methods=["POST", "GET"])
+def flackchat():
+    user = request.form.get("displayname")
     return render_template("channels.html", name=user)
 
-@app.route("/new_channel", methods=['GET','POST'])
+@app.route("/register")
+def register():
+    return 0
+
 @socketio.on("submit channel")
-def new_channel():
+def new_channel(data):
     channel = data["channel"]
     channel_list.append(channel)
     emit("announce channel", {"channel": channel}, broadcast=True)
     return 1
 
-
-@app.route("/users", methods=["POST", "GET"])
-@login_required
-def users():
-    return jsonify({"success": True, "active_users": user_arr})
-
-
-@app.route("/channels/<channel>", methods=["POST", "GET"])
-@login_required
-def channels():
+@app.route("/query_channels", methods=["POST"])
+def query_channels():
     return jsonify({"success": True, "channel_list": channel_list})
 
-@app.route("/get_messages", methods=["POST", "GET"])
-@login_required
-def get_messages():
+@app.route("/query_users", methods=["POST"])
+def query_users():
+    return jsonify({"success": True, "active_users": user_list})
+
+@app.route("/query_messages", methods=["POST"])
+def fetch_messages():
     channel = request.form.get("channel")
     dn = request.form.get("displayname")
     msg_status = request.form.get("msg_type")
@@ -125,46 +94,8 @@ def get_messages():
     else:
         return jsonify({"success": False, "error_msg": "No messages"})
 
-@socketio.on('join')
-def on_join(data):
-    username = data['displayname']
-    if (username == ""):
-        return jsonify ({"success": False, "error_msg": "No text entered"})
-
-    if (not (username in user_list)):
-        user_list.append(username)
-        user_dm_list[username] = ({"channel": username, "messages": []})
-        emit("new user", {"username": username}, broadcast= True)
-    else:
-        emit("user logged in", {"username": username}, broadcast=True)
-
-    room = data['room']
-    join_room(room)
-    Rooms[username] = room
-    print (f"username ", username, "has room ", Rooms[username])
-    return jsonify ({"success": True})
-
-@socketio.on('logout user')
-def on_leave(data):
-    username = data['displayname']
-    print (f"username ", username, " logging out")
-    room = Rooms[username]
-    leave_room(room)
-    del Rooms[username]
-    emit("user logged out", {"username": username}, broadcast=True)
-
-@socketio.on('leave')
-def on_leave(data):
-    username = data['displayname']
-    print (f"username ", username, " logging out")
-    room = Rooms[username]
-    leave_room(room)
-    del Rooms[username]
-    emit("user logged out", {"username": username}, broadcast=True)
-
-
 @socketio.on("submit message")
-def new_message(message, timestamp):
+def new_message(data):
     channel = data["channel"]
     user_from = data["user_from"]
     msg_txt = data["msg_txt"]
@@ -211,15 +142,42 @@ def new_message(message, timestamp):
             emit("announce message", msg, room=Rooms[channel])
             return jsonify ({"success": True, "msg_type": "PRIVATE"})
 
+@socketio.on('join')
+def on_join(data):
+    username = data['displayname']
+    if (username == ""):
+        return jsonify ({"success": False, "error_msg": "No text entered"})
 
-    if len(channelMessages[room]) > 100:
-        emit({"user": session.get('username'),
-              "timestamp": timestamp,
-              "message": message},
-              room=room)
+    if (not (username in user_list)):
+        user_list.append(username)
+        user_dm_list[username] = ({"channel": username, "messages": []})
+        emit("new user", {"username": username}, broadcast= True)
+    else:
+        emit("user logged in", {"username": username}, broadcast=True)
 
+    room = data['room']
+    join_room(room)
+    Rooms[username] = room
+    print (f"username ", username, "has room ", Rooms[username])
+    return jsonify ({"success": True})
 
+@socketio.on('logout user')
+def on_leave(data):
+    username = data['displayname']
+    print (f"username ", username, " logging out")
+    room = Rooms[username]
+    leave_room(room)
+    del Rooms[username]
+    emit("user logged out", {"username": username}, broadcast=True)
 
+@socketio.on('leave')
+def on_leave(data):
+    username = data['displayname']
+    print (f"username ", username, " logging out")
+    room = Rooms[username]
+    leave_room(room)
+    del Rooms[username]
+    emit("user logged out", {"username": username}, broadcast=True)
 
 
 if __name__ == "__main__":
