@@ -110,6 +110,16 @@ def on_leave(data):
     leave_room(room)
     emit(nickname + ' has left the room.', room=room)
 
+@socketio.on("my error event")
+def on_my_event(data):
+    raise RuntimeError()
+
+
+@socketio.on_error_default
+def default_error_handler(e):
+    print(request.event["message"]) # "my error event"
+    print(request.event["args"]) 
+
 
 if __name__ == "__main__":
     app.run()
