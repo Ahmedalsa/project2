@@ -49,3 +49,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 socket.emit('join', data);
                 return false;
             };
+
+            // Button should emit a "send meesage" event
+            document.querySelector('#new-message').onsubmit = () => {
+                let date = new Date();
+                let timestamp = date.getTime();
+                let room = localStorage.getItem('room');
+                let data = {
+                    'message': document.querySelector('#message').value,
+                    'timestamp': timestamp,
+                    'nickname': room,
+                    'room': room
+                };
+
+                socket.emit('send message', data);
+
+                // Clear input field and disable button again
+                document.querySelector('#message').value = '';
+                document.querySelector('#submit').disabled = true;
+
+                return false;
+            };
+        });
+
+    // When a new vote is announced, add to the unordered list
+    socket.on('announce chat', messages1 => {
+        const li = document.createElement('li');
+        li.innerHTML = `From: ${messages1.nickname} at ${messages1.timestamp} says ${messages1.message} in ${messages1.room}`;
+        document.querySelector('#messages').append(li);
+        return false;
+    });
+    });
