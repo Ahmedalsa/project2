@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block javascripts %}
+        <script src="{{ url_for('static', filename='chat.js') }}"></script>
+{% endblock %}
+
+{% block title %}
+    Flack Chat
+{% endblock %}
+
+{% block content %}
+<h1>Flack - Welcome <span id="nickname">{{ nickname }}</span> to <span id="room">{{ room }}</span></h1>
+  <hr>
+  <div class="row">
+    <div id="channels" class="column">
+      <form id="channel-form">
+      <input id="channel" autocomplete="off" placeholder="Channel" type="text">
+      <input id="select_channel" type="Submit">
+      </form>
+    </div>
+    <div class="column">
+    <ul id="messages">
+    </ul>
+  </div>
+  </div>
+    <hr>
+        <form id="new-message">
+            <input id="message" autocomplete="off" autofocus placeholder="Message" type="text">
+            <input id="submit" type="submit">
+        </form>
+{% endblock %}
