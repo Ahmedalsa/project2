@@ -23,3 +23,29 @@ document.addEventListener('DOMContentLoaded', () => {
         else
             document.querySelector('#submit').disabled = true;
     };
+
+
+    // Connect to websocket
+        var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+        // When connected, configure buttons
+        socket.on('connect', () => {
+
+            // Button should emit a 'join' room event
+            document.querySelector('#channel-form').onsubmit = () => {
+                var rooms
+                var data = {
+                    'nickname': localStorage.getItem('nickname').timestamp,
+                    'room': document.querySelector('#channel').value,
+                    'rooms': rooms
+                };
+
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="">${data.room}</a>`;
+                document.querySelector('#channels').append(li);
+                document.querySelector('#channel').value = "";
+
+                data.rooms.append(data.room);
+                socket.emit('join', data);
+                return false;
+            };
