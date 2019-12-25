@@ -105,12 +105,10 @@ def on_leave(data):
 
 @socketio.on('leave')
 def on_leave(data):
-    username = data['displayname']
-    print (f"username ", username, " logging out")
-    room = Rooms[username]
+    nickname = data['nickname']
+    room = data['room']
     leave_room(room)
-    del Rooms[username]
-    emit("user logged out", {"username": username}, broadcast=True)
+    emit(nickname + ' has left the room.', room=room)
 
 
 if __name__ == "__main__":
