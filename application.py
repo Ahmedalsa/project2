@@ -89,22 +89,10 @@ def send(data):
 
 @socketio.on('join')
 def on_join(data):
-    username = data['displayname']
-    if (username == ""):
-        return jsonify ({"success": False, "error_msg": "No text entered"})
-
-    if (not (username in user_list)):
-        user_list.append(username)
-        user_dm_list[username] = ({"channel": username, "messages": []})
-        emit("new user", {"username": username}, broadcast= True)
-    else:
-        emit("user logged in", {"username": username}, broadcast=True)
-
+    nickname = data['nickname']
     room = data['room']
     join_room(room)
-    Rooms[username] = room
-    print (f"username ", username, "has room ", Rooms[username])
-    return jsonify ({"success": True})
+    emit(nickname + ' has entered the room.', room=room)
 
 @socketio.on('logout user')
 def on_leave(data):
