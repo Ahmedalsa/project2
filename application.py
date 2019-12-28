@@ -113,14 +113,15 @@ def join(data):
         channels[data["channel"]].pop(0)
     emit("joined",{'channels':channels},room=room)
 
-@socketio.on('logout user')
-def on_leave(data):
-    username = data['displayname']
-    print (f"username ", username, " logging out")
-    room = Rooms[username]
+@socketio.on('leave')
+def leave(data):
+    room = data["channel"]
     leave_room(room)
-    del Rooms[username]
-    emit("user logged out", {"username": username}, broadcast=True)
+    message={'text':data["mymessage"],'username':data['username'],"time":data['time']}
+    channels[data["channel"]].append(message)
+    if (len(channels[data["channel"]])>limit):
+        channels[data["channel"]].pop(0)
+    emit("left",{'channels':channels},room=room)
 
 @socketio.on('leave')
 def on_leave(data):
