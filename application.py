@@ -123,6 +123,17 @@ def leave(data):
         channels[data["channel"]].pop(0)
     emit("left",{'channels':channels},room=room)
 
+@socketio.on('new username')
+def new_username(data):
+    username=""
+    error=""
+    if data['username'] in usersList:
+        error="Username already exist. Try again"
+    else:
+        usersList[data['username']]=request.sid
+        username=data["username"]
+    emit("add username",{"username":username,'error':error})
+
 @socketio.on('leave')
 def on_leave(data):
     nickname = data['nickname']
