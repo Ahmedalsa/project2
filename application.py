@@ -49,12 +49,20 @@ def flackchat():
 def register():
     return 0
 
-@socketio.on("submit channel")
+@socketio.on('new channel')
 def new_channel(data):
-    channel = data["channel"]
-    channel_list.append(channel)
-    emit("announce channel", {"channel": channel}, broadcast=True)
-    return 1
+    error=""
+    if data["channel"] in channelsList or data['channel']=="General":
+        error="Channel already exist. Try again."
+    elif data["channel"][0].isdigit():
+        error="Channel name cannot start with a number"
+    elif ' ' in data['channel']:
+        error="Channel name can't contain space"
+    else:
+        channelsList.append(data['channel'])
+        #create place for future messages
+        channels[data["channel"]]=[]
+    emit("add channel",{'channel':data["channel"],'error':error})
 
 @app.route("/query_channels", methods=["POST"])
 def query_channels():
