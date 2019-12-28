@@ -104,11 +104,14 @@ def send(data):
     emit("announce chat", messages1, broadcast=True)
 
 @socketio.on('join')
-def on_join(data):
-    nickname = data['nickname']
-    room = data['room']
+def join(data):
+    room = data["channel"]
     join_room(room)
-    emit(nickname + ' has entered the room.', room=room)
+    message={'text':data["mymessage"],'username':data['username'],"time":data['time']}
+    channels[data["channel"]].append(message)
+    if (len(channels[data["channel"]])>limit):
+        channels[data["channel"]].pop(0)
+    emit("joined",{'channels':channels},room=room)
 
 @socketio.on('logout user')
 def on_leave(data):
