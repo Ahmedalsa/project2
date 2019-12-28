@@ -18,11 +18,19 @@ socketio = SocketIO(app)
 # channel_messages
 
 messages1 = {}
+channelsList=[]
+privateMessages={}
+usersList={}
+limit=100
 
 
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@socketio.on('connect')
+def connect():
+    emit("load channels",{'channels':channels})
 
 @app.route("/chat")
 def chat():
@@ -118,7 +126,7 @@ def on_my_event(data):
 @socketio.on_error_default
 def default_error_handler(e):
     print(request.event["message"]) # "my error event"
-    print(request.event["args"]) 
+    print(request.event["args"])
 
 
 if __name__ == "__main__":
