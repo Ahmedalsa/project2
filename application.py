@@ -45,9 +45,17 @@ def flackchat():
     user = request.form.get("displayname")
     return render_template("channels.html", name=user)
 
-@app.route("/register")
-def register():
-    return 0
+@socketio.on('new username')
+def new_username(data):
+    username=""
+    error=""
+    if data['username'] in usersList:
+        error="Username already exist. Try again"
+    else:
+        usersList[data['username']]=request.sid
+        username=data["username"]
+    emit("add username",{"username":username,'error':error})
+
 
 @socketio.on('new channel')
 def new_channel(data):
