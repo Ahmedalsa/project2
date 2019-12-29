@@ -45,6 +45,14 @@ def flackchat():
     user = request.form.get("displayname")
     return render_template("channels.html", name=user)
 
+@socketio.on('submit to all')
+def submit_to_all(data):
+    message={'text':data["mymessage"],'username':data['username'],"time":data['time']}
+    channels['General'].append(message)
+    if (len(channels['General'])>limit):
+        channels['General'].pop(0)
+    emit("announce to all",{'channels':channels},broadcast=True)
+
 @socketio.on('submit to room')
 def submit_to_room(data):
     room = data["channel"]
