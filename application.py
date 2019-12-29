@@ -81,6 +81,11 @@ def new_channel(data):
         channels[data["channel"]]=[]
     emit("add channel",{'channel':data["channel"],'error':error})
 
+@socketio.on('update users channels')
+def update_users_channels(data):
+    channel=data['channel']
+    emit("update channels",{'channel':channel},broadcast=True)
+
 @app.route("/query_channels", methods=["POST"])
 def query_channels():
     return jsonify({"success": True, "channel_list": channel_list})
