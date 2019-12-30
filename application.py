@@ -73,6 +73,10 @@ def new_username(data):
         username=data["username"]
     emit("add username",{"username":username,'error':error})
 
+@socketio.on('come back to general')
+def come_back_to_general():
+    emit("announce to all",{'channels':channels},broadcast=True)
+
 
 @socketio.on('new channel')
 def new_channel(data):
