@@ -184,6 +184,29 @@ def on_leave(data):
     leave_room(room)
     emit(nickname + ' has left the room.', room=room)
 
+@socketio.on('private')
+def private(data):
+    message={'text':data["mymessage"],'username':data['username'],"time":data['time']}
+    room=data['username']+data['username2']
+    if data['username'] not in privateMessages:
+        privateMessages[data['username']]={}
+    if data['username2'] not in privateMessages:
+        privateMessages[data['username2']]={}
+    if data['username'] not in privateMessages[data['username2']]:
+        privateMessages[data['username2']][data['username']]=[]
+    if data['username2'] not in privateMessages[data['username']]:
+        privateMessages[data['username']][data['username2']]=[]
+    privateMessages[data['username2']][data['username']].append(message)
+    privateMessages[data['username']][data['username2']].append(message)
+    if (len(privateMessages[data['username2']][data['username']])>limit):
+        privateMessages[data['username2']][data['username']].pop(0)
+    if (len(privateMessages[data['username']][data['username2']])>limit):
+        privateMessages[data['username']][data['username2']].pop(0)
+    #assign two users into room
+    socketio.server.enter_room(usersList[data['username2']], room)
+    socketio.server.enter_room(request.sid, room)
+    emit('private room',{'privateMessages':privateMessages,'sender':data['username'],'receiver':data['username2']},room=room)
+
 @socketio.on("my error event")
 def on_my_event(data):
     raise RuntimeError()
