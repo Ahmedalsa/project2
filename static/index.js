@@ -1,5 +1,9 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize new Chat
+$(function(){
+
+    // Initialize new Chat document ready 
+   var socket=io.connect(location.protocol+'//'+document.domain+':'+location.port);
+   privateWindow=false;
+   inRoom=false;
     const nickname = document.querySelector('#nickname').value;
     request.open('POST', '/chat');
 
@@ -16,13 +20,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // TODO Replace function below
           // Each button should emit a "submit vote" event
-          document.querySelectorAll('button').forEach(button => {
-              button.onclick = () => {
-                  const selection = button.dataset.vote;
-                  socket.emit('submit vote', {'selection': selection});
-              };
-          });
-      });
-
-    });
-});
