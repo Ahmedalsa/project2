@@ -177,12 +177,6 @@ def new_username(data):
         username=data["username"]
     emit("add username",{"username":username,'error':error})
 
-@socketio.on('leave')
-def on_leave(data):
-    nickname = data['nickname']
-    room = data['room']
-    leave_room(room)
-    emit(nickname + ' has left the room.', room=room)
 
 @socketio.on('private')
 def private(data):
