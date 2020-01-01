@@ -1,20 +1,37 @@
 $(function(){
 
-    // Initialize new Chat document ready 
+    // Initialize new Chat document ready
    var socket=io.connect(location.protocol+'//'+document.domain+':'+location.port);
    privateWindow=false;
    inRoom=false;
-    const nickname = document.querySelector('#nickname').value;
-    request.open('POST', '/chat');
-
+   socket.on('connect',()=>{
+      $('#messageInput').on("keyup",function(key) {
+          activeChannel=$("#channelList .active").attr('id');
+          //broadcast to all
     // Initialize local storage
-    document.querySelector('button').onclick = () => {
-      if (!localStorage.getItem('nickname'))
-        localStorage.setItem('nickname', nickname));
-      }
+    if (key.keyCode==13 && $(this).val()!="" && !privateWindow && !inRoom) {
+               const mymessage=$(this).val();
+               const username=localStorage.getItem('username');
+               const time=new Date().toLocaleString();
+               $('#messageInput').val("")
+               socket.emit('submit to all',{'mymessage':mymessage,'username':username,'time':time});
+           }//send to room
+           if (key.keyCode==13 && $(this).val()!="" && !privateWindow && inRoom) {
+               const mymessage=$(this).val();
+               const username=localStorage.getItem('username');
+               const time=new Date().toLocaleString();
+               $('#messageInput').val("")
+               socket.emit('submit to room',{'channel':activeChannel,'mymessage':mymessage,'username':username,'time':time});
+           //send private
       // Connect to websocket
-      var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
-
+    } else if (key.keyCode==13 && $(this).val()!="" && privateWindow && !inRoom) {
+                const mymessage=$(this).val();
+                const username=localStorage.getItem('username');
+                const username2=localStorage.getItem('activeMessage');
+                const time=new Date().toLocaleString();
+                $('#messageInput').val("")
+                socket.emit('private',{'mymessage':mymessage,'username':username,'time':time,'username2':username2});
+            }
       // When connected, configure buttons
       socket.on('connect', () => {
 
