@@ -41,5 +41,14 @@ $(function(){
                } else {
                    activeChannel=localStorage.getItem('activeChannel');
                }
+
+               const username=localStorage.getItem('username');
+                           const time=new Date().toLocaleString();
+                           $(this).addClass('active');
+                           $(this).siblings().removeClass('active');
+                           $('#messages').html("");
+                           if (activeChannel!="General" && !privateWindow) {
+                               socket.emit('leave',{'channel':activeChannel,'mymessage':'has left the room','username':username,'time':time});
+                           }
           // TODO Replace function below
           // Each button should emit a "submit vote" event
