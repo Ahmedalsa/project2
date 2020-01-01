@@ -33,7 +33,13 @@ $(function(){
                 socket.emit('private',{'mymessage':mymessage,'username':username,'time':time,'username2':username2});
             }
       // When connected, configure buttons
-      socket.on('connect', () => {
-
+    });
+           $('#channelList').on('click','li', function(){
+               $('#messageInput').focus();
+               if (!localStorage.getItem('activeChannel')) {
+                   activeChannel="General";
+               } else {
+                   activeChannel=localStorage.getItem('activeChannel');
+               }
           // TODO Replace function below
           // Each button should emit a "submit vote" event
