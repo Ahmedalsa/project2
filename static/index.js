@@ -78,3 +78,28 @@ $(function(){
             chooseUser($(this).text());
         });
     });
+
+    socket.on('joined', data=> {
+        loadMessages(data);
+        $('#messageInput').focus();
+        $('.text-danger').on('click',function() {
+            chooseUser($(this).text());
+        });
+    });
+
+    socket.on('left', data=> {
+        loadMessages(data);
+    });
+
+    socket.on('announce to room', data=> {
+        loadMessages(data);
+        $('.text-danger').on('click',function() {
+            chooseUser($(this).text());
+        });
+    });
+
+    socket.on('load channels', data=> {
+        $('#channelList li').remove();
+        loadChannels(data);
+        $('#'+localStorage.getItem('activeChannel')).click();
+    });
