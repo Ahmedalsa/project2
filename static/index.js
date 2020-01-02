@@ -69,5 +69,12 @@ $(function(){
                                        $('#modalInput').val("");
                                    }
                                });
+    socket.on('announce to all', data=> {
+        if (!privateWindow){
+            loadMessages(data);
+        }
 
-                               
+        $('.text-danger').on('click',function() {
+            chooseUser($(this).text());
+        });
+    });
