@@ -42,7 +42,7 @@ $(function(){
                    activeChannel=localStorage.getItem('activeChannel');
                }
 
-               const username=localStorage.getItem('username');
+                           const username=localStorage.getItem('username');
                            const time=new Date().toLocaleString();
                            $(this).addClass('active');
                            $(this).siblings().removeClass('active');
@@ -50,5 +50,24 @@ $(function(){
                            if (activeChannel!="General" && !privateWindow) {
                                socket.emit('leave',{'channel':activeChannel,'mymessage':'has left the room','username':username,'time':time});
                            }
-          // TODO Replace function below
-          // Each button should emit a "submit vote" event
+                           activeChannel=$("#channelList .active").attr('id');
+                                       localStorage.setItem('activeChannel',activeChannel)
+                                       if (activeChannel=='General') {
+                                           inRoom=false;
+                                           privateWindow=false;
+                                           return socket.emit('come back to general');
+                                       } else {
+                                           inRoom=true;
+                                           privateWindow=false;
+                                       }
+                                       socket.emit('join',{'channel':activeChannel,'mymessage':'has entered the room','username':username,'time':time});
+                                    });
+
+                                   if (!localStorage.getItem('username')) {
+                                       $("#myModal").modal({backdrop: 'static', keyboard: false});
+                                       $('.modal-title').text("Please enter your username");
+                                       $('#modalInput').val("");
+                                   }
+                               });
+
+                               
