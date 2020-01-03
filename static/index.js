@@ -103,3 +103,62 @@ $(function(){
         loadChannels(data);
         $('#'+localStorage.getItem('activeChannel')).click();
     });
+
+    socket.on('add username', data=> {
+        if (data["error"]!="") {
+            window.setTimeout(function () {
+                $("#myModal").modal({backdrop: 'static', keyboard: false});
+                $('.modal-title').text(data["error"]);
+                $('#modalInput').val("");
+                $("#modalButton").attr('disabled',true);
+            }, 900);
+        } else {
+            localStorage.setItem('username',data["username"]);
+            $('#username').text(localStorage.getItem('username'));
+            $('#General').click();
+            $('#messageInput').focus();
+        }
+    });
+
+    socket.on('add channel', data=> {
+        if (data["error"]!="") {
+            window.setTimeout(function () {
+                $("#myModal").modal({backdrop: 'static', keyboard: false});
+                $('.modal-title').text(data["error"]);
+                $('#modalInput').val("");
+                $("#modalButton").attr('disabled',true);
+            }, 900);
+        } else {
+            appendChannel(data['channel']);
+            $('#channelList li:last').addClass('active');
+            $('#channelList li:last').click();
+            inRoom=true;
+            var removeHash=$('#channelList li:last').text().slice(1);
+            localStorage.setItem('activeChannel',removeHash);
+            $('#channelList').scrollTop(500000);
+            $('#messageInput').focus();
+            socket.emit('update users channels',{'channel':data['channel']});
+        }
+    });
+
+ socket.on('update channels',data => {
+     if ($('#'+data['channel']).length==0){
+         appendChannel(data['channel']);
+     }
+ });
+
+ socket.on('private room',data => {
+     const li=document.createElement('li');
+     li.className='list-group-item p-1';
+     if (data["sender"] == localStorage.getItem('username')) {
+         privateWindow=true;
+         inRoom=false;
+         $('#channelList .active').removeClass('active');
+         localStorage.setItem('activeMessage',data['receiver']);
+         loadPrivateMessages(data,data['receiver']);
+         var receiverExist=false;
+         $("#inbox > li").each(function() {
+             if ($(this).text().search(data['receiver']) > -1) {
+                 receiverExist=true;
+             }
+         });
