@@ -202,3 +202,19 @@ if (privateWindow) {
 }
 }
 }
+$('#inbox li').on('click', function(){
+    $('#messageInput').focus();
+    localStorage.setItem('activeMessage',$(this).text());
+    $(this).removeClass('bg-info');
+    loadPrivateMessages(data,$(this).text());
+    privateWindow=true;
+    const username=localStorage.getItem('username');
+    const time=new Date().toLocaleString();
+    activeChannel=localStorage.getItem('activeChannel');
+    if (activeChannel!="General" && inRoom ) {
+        socket.emit('leave',{'channel':activeChannel,'mymessage':'has left the room','username':username,'time':time});
+    }
+    inRoom=false;
+    $('#channelList .active').removeClass('active');
+});
+});
