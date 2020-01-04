@@ -257,4 +257,21 @@ function loadMessages(data) {
             const media=document.createElement('div');
             if (data['channels'][activeChannel][x]['username']==localStorage.getItem('username')) {
                 media.className=' media d-flex flex-row-reverse';
+            }else {
+                media.className=' media';
             }
+            const mediaLeft=document.createElement('div');
+            mediaLeft.className=' media-left';
+            const mediaBody=document.createElement('div');
+            mediaBody.className=' media-left';
+            const username=document.createElement('span');
+            username.innerHTML=data['channels'][activeChannel][x]['username']
+            username.className='text-danger';
+            const p=document.createElement('p');
+            p.innerHTML=data['channels'][activeChannel][x]['text']
+            const avatar=document.createElement('img');
+            avatar.className='media-object';
+            avatar.src='static/avatar.png';
+            const time=document.createElement('small');
+            time.innerHTML=data['channels'][activeChannel][x]['time'];
+            time.className='text-muted pl-2';
