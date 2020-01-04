@@ -242,16 +242,12 @@ $("#modalButton").on('click', function () {
         socket.emit('new channel',{'channel':channelName});
     }
 });
-$("#modalButton").on('click', function () {
-    // action for new username
-    if (!localStorage.getItem('username')) {
-        var username=$('#modalInput').val();
-        username=username.charAt(0).toUpperCase() + username.slice(1);
-        socket.emit('new username',{'username':username});
-    // action for new channelname
-    } else {
-        var channelName=$('#modalInput').val();
-        channelName=channelName.charAt(0).toUpperCase() + channelName.slice(1);
-        socket.emit('new channel',{'channel':channelName});
-    }
+$('kbd').on('click',function (){
+    $("#myModal").modal({backdrop: 'static', keyboard: false});
+    $('.modal-title').text("Please enter channel name");
+    $('#modalInput').val("");
+    $("#modalButton").attr('disabled',true);
+});
+
+$('#username').text(localStorage.getItem('username'));
 });
