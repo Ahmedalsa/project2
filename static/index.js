@@ -251,3 +251,10 @@ $('kbd').on('click',function (){
 
 $('#username').text(localStorage.getItem('username'));
 });
+function loadMessages(data) {
+        $('#messages').html("");
+        for (x in data['channels'][activeChannel]) {
+            const media=document.createElement('div');
+            if (data['channels'][activeChannel][x]['username']==localStorage.getItem('username')) {
+                media.className=' media d-flex flex-row-reverse';
+            }
