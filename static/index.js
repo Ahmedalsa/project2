@@ -162,3 +162,36 @@ $(function(){
                  receiverExist=true;
              }
          });
+         if (!receiverExist){
+    li.innerHTML=data['receiver'];
+    $('#inbox').append(li);
+}
+} else {
+//if private window open
+if (privateWindow) {
+    if (localStorage.getItem('activeMessage')==data['sender']) {
+        loadPrivateMessages(data,data['sender']);
+    } else {
+        var senderExist=false;
+        $("#inbox > li").each(function() {
+        if ($(this).text().search(data['sender']) > -1) {
+            $(this).html(data['sender']);
+            $(this).addClass('bg-info');
+            senderExist=true;
+        }
+        });
+        if (!senderExist){
+            li.innerHTML=data['sender'];
+            li.className='list-group-item p-1 bg-info';
+            $('#inbox').append(li);
+        }
+    }
+} else {
+    var senderExist=false;
+    $("#inbox > li").each(function() {
+        if ($(this).text().search(data['sender']) > -1) {
+            $(this).html(data['sender']);
+            $(this).addClass('bg-info');
+            senderExist=true;
+        }
+    });
