@@ -229,3 +229,29 @@ $("#modalInput").on('keyup', function (key) {
         $("#modalButton").attr('disabled',true);
     }
 });
+$("#modalButton").on('click', function () {
+    // action for new username
+    if (!localStorage.getItem('username')) {
+        var username=$('#modalInput').val();
+        username=username.charAt(0).toUpperCase() + username.slice(1);
+        socket.emit('new username',{'username':username});
+    // action for new channelname
+    } else {
+        var channelName=$('#modalInput').val();
+        channelName=channelName.charAt(0).toUpperCase() + channelName.slice(1);
+        socket.emit('new channel',{'channel':channelName});
+    }
+});
+$("#modalButton").on('click', function () {
+    // action for new username
+    if (!localStorage.getItem('username')) {
+        var username=$('#modalInput').val();
+        username=username.charAt(0).toUpperCase() + username.slice(1);
+        socket.emit('new username',{'username':username});
+    // action for new channelname
+    } else {
+        var channelName=$('#modalInput').val();
+        channelName=channelName.charAt(0).toUpperCase() + channelName.slice(1);
+        socket.emit('new channel',{'channel':channelName});
+    }
+});
