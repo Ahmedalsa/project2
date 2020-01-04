@@ -286,3 +286,12 @@ function loadMessages(data) {
            $('#messages').scrollTop(500000);
    }
 }
+function loadPrivateMessages(data,otherUser) {
+    $('#messages').html("");
+    for (message in data['privateMessages'][localStorage.getItem('username')][otherUser]) {
+        const media=document.createElement('div');
+        if (data['privateMessages'][localStorage.getItem('username')][otherUser][message]['username']==localStorage.getItem('username')) {
+            media.className=' media d-flex flex-row-reverse';
+        }else {
+            media.className=' media';
+        }
