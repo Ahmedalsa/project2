@@ -218,3 +218,14 @@ $('#inbox li').on('click', function(){
     $('#channelList .active').removeClass('active');
 });
 });
+$("#modalInput").on('keyup', function (key) {
+    if ($(this).val().length > 0 ){
+        $("#modalButton").attr('disabled',false);
+        if (key.keyCode==13 ) {
+            $('#modalButton').click();
+        }
+    }
+    else {
+        $("#modalButton").attr('disabled',true);
+    }
+});
