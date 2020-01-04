@@ -195,3 +195,10 @@ if (privateWindow) {
             senderExist=true;
         }
     });
+    if (!senderExist){
+    li.innerHTML=data['sender'];
+    li.className='list-group-item p-1 bg-info';
+    $('#inbox').append(li);
+}
+}
+}
