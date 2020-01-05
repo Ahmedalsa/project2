@@ -316,7 +316,14 @@ function loadPrivateMessages(data,otherUser) {
         mediaBody.append(username);
         mediaBody.append(time);
         mediaBody.append(p);
-        mediaLeft.append(avatar);        
+        mediaLeft.append(avatar);
         $('#messages').scrollTop(500000);
 }
+}
+
+function loadChannels(data) {
+    for (channel in data['channels']){
+        appendChannel(channel);
+    }
+
 }
