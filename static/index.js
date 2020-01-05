@@ -295,3 +295,18 @@ function loadPrivateMessages(data,otherUser) {
         }else {
             media.className=' media';
         }
+        const mediaLeft=document.createElement('div');
+        mediaLeft.className=' media-left';
+        const mediaBody=document.createElement('div');
+        mediaBody.className=' media-left';
+        const username=document.createElement('span');
+        username.innerHTML=data['privateMessages'][localStorage.getItem('username')][otherUser][message]['username']
+        username.className='text-danger';
+        const p=document.createElement('p');
+        p.innerHTML=data['privateMessages'][localStorage.getItem('username')][otherUser][message]['text']
+        const avatar=document.createElement('img');
+        avatar.className='media-object';
+        avatar.src='static/avatar.png';
+        const time=document.createElement('small');
+        time.innerHTML=data['privateMessages'][localStorage.getItem('username')][otherUser][message]['time'];
+        time.className='text-muted pl-2';
