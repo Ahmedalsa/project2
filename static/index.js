@@ -310,3 +310,13 @@ function loadPrivateMessages(data,otherUser) {
         const time=document.createElement('small');
         time.innerHTML=data['privateMessages'][localStorage.getItem('username')][otherUser][message]['time'];
         time.className='text-muted pl-2';
+        $('#messages').append(media);
+        media.append(mediaLeft);
+        media.append(mediaBody);
+        mediaBody.append(username);
+        mediaBody.append(time);
+        mediaBody.append(p);
+        mediaLeft.append(avatar);        
+        $('#messages').scrollTop(500000);
+}
+}
