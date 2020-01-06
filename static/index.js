@@ -327,3 +327,10 @@ function loadChannels(data) {
     }
 
 }
+function appendChannel(channel) {
+    const li=document.createElement('li');
+    li.className='list-group-item p-1';
+    li.innerHTML='#'+channel.charAt(0).toUpperCase() + channel.slice(1);
+    li.setAttribute("id", channel);
+    $('#channelList').append(li);
+}
