@@ -346,4 +346,8 @@ function chooseUser(user) {
         if (activeChannel!="General") {
             socket.emit('leave',{'channel':activeChannel,'mymessage':'has left the room','username':username,'time':time});
         }
+    }else {
+
     }
+    $('#messageInput').focus();
+}
