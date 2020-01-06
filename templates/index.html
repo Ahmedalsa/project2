@@ -16,4 +16,16 @@
     <div   class='col-9 bg-light border p-3 d-flex flex-column justify-content-end h-100' >
         <div id='messages' >
         </div>
+        <input id='messageInput' type='text' class="  form-control text-right " maxlength="80">
+        </div>
+        <div class='col-3  text-center'>
+            <h2 id='username' class='text-center bg-info m-1 rounded '></h2>
+            <h4 class='pl-1'>Messages</h4>
+            <ul id='inbox' class="list-group h-25 border border-light rounded m-1">
+            </ul>
+            <h4 class='pl-1 pt-2'>Channels&nbsp; <kbd>+</kbd></h4>
+            <ul id='channelList' class="list-group text-center h-50 m-1 ">
+            </ul>
+        </div>
+    </div>
 {% endblock %}
