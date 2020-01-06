@@ -9,12 +9,11 @@
 {% endblock %}
 
 {% block content %}
-<h1>Welcome to Flack Chat</h1>
-    <hr>
-        <div>
-          <form id="form" action="/chat">
-              <input id="nickname" autocomplete="off" autofocus placeholder="Nickname" type="text">
-              <input type="submit">
-          </form>
+<nav class='navbar justify-content-center'>
+  <h1>Welcome to Flack Chat</h1>
+</nav>
+<div  class='row h-75 no-gutters border border-secondary' >
+    <div   class='col-9 bg-light border p-3 d-flex flex-column justify-content-end h-100' >
+        <div id='messages' >
         </div>
 {% endblock %}
