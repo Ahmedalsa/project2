@@ -334,3 +334,16 @@ function appendChannel(channel) {
     li.setAttribute("id", channel);
     $('#channelList').append(li);
 }
+function chooseUser(user) {
+    if (user!=localStorage.getItem('username')) {
+        const username=localStorage.getItem('username');
+        const time=new Date().toLocaleString();
+        activeChannel=localStorage.getItem('activeChannel');
+        privateWindow=true;
+        inRoom=false;
+        $('#messages').html("");
+        localStorage.setItem('activeMessage',user);
+        if (activeChannel!="General") {
+            socket.emit('leave',{'channel':activeChannel,'mymessage':'has left the room','username':username,'time':time});
+        }
+    }
