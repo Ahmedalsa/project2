@@ -8,7 +8,7 @@ from gevent.pywsgi import WSGIServer
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-socketio = SocketIO(app)
+socketio = SocketIO(app, manage_session=False)
 
 # Arrays of channel names and registered users
 
