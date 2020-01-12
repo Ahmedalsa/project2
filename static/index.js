@@ -2,15 +2,13 @@
   // Initialize new Chat document ready
       //broadcast to all
     // Initialize local storage
-$(function(){   
-        // document ready
+$(function(){
         var socket=io.connect(location.protocol+'//'+document.domain+':'+location.port);
         privateWindow=false;
         inRoom=false;
         socket.on('connect',()=>{
             $('#messageInput').on("keyup",function(key) {
                 activeChannel=$("#channelList .active").attr('id');
-                //broadcast to all
                 if (key.keyCode==13 && $(this).val()!="" && !privateWindow && !inRoom) {
                     const mymessage=$(this).val();
                     const username=localStorage.getItem('username');
