@@ -2,16 +2,14 @@ import os
 
 from flask import Flask, render_template, request, jsonify, Response
 import random, json, time, datetime
-from Werkzeug import flask_socketio
+from werkzeug.wrappers import flask_socketio
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from gevent.pywsgi import WSGIServer
 
 
 app = Flask(__name__)
-#app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
-http_server = WSGIServer(('0.0.0.0', 80), app)
-http_server.serve_forever()
 
 # Arrays of channel names and registered users
 
@@ -217,5 +215,12 @@ def default_error_handler(e):
     print(request.event["args"])
 
 
+def main():
+    "Start gevent WSGI server"
+    # use gevent WSGI server instead of the Flask
+    http = WSGIServer(('', 5000), app.wsgi_app)
+    # TODO gracefully handle shutdown
+    http.serve_forever()
+
 if __name__ == "__main__":
-    app.run()
+    main()
