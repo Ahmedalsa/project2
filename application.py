@@ -4,11 +4,14 @@ from flask import Flask, render_template, request, jsonify, Response
 import random, json, time, datetime
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from gevent import wsgi
+from gevent.pywsgi import WSGIServer
 
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-socketio = SocketIO(app)
+#app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+#socketio = SocketIO(app)
+http_server = WSGIServer(('0.0.0.0', 80), app)
+http_server.serve_forever()
 
 # Arrays of channel names and registered users
 
