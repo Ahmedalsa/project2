@@ -220,6 +220,7 @@ def main():
     http = WSGIServer(('', 5000), app.wsgi_app)
     # TODO gracefully handle shutdown
     http.serve_forever()
+    socketio.run(app)
 
 if __name__ == "__main__":
     main()
