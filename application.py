@@ -8,7 +8,7 @@ from gevent.pywsgi import WSGIServer
 
 app = Flask(__name__)
 #app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-#socketio = SocketIO(app)
+socketio = SocketIO(app)
 http_server = WSGIServer(('0.0.0.0', 80), app)
 http_server.serve_forever()
 
